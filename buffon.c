@@ -1,13 +1,14 @@
-/**
-  EP-1 AGA511
-  buffon.c
-  Purpose: Calculates pi using Buffon's technique.
-
-  @author: Marcelo Pinto
-  @email: mpinto@usp.br
-  @version: 0.5
-  @date: 8/30/2017
-*/
+/*
+ * AGA511
+ * EP-1
+ * buffon.c
+ * Purpose: Calculates pi using Buffon's technique.
+ *
+ * @author: Marcelo Pinto
+ * @email: mpinto@usp.br
+ * @version: 0.6
+ * @date: 09/11/2017
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,71 +20,74 @@
 #include <regex.h>
 
 
-
-/**
-  Verify if a string is a valid integer.
-
-  @param number
-  @return bool 
-*/
+/*
+ * Verify if a string is a valid integer.
+ *
+ * @param number
+ * @return bool 
+ */
 int
-is_integer(char *number)
+is_integer (char *number)
 {
   int r;
   regex_t regex;
   const char *pattern = "^[0-9]+$";
 
   r = regcomp (&regex, pattern, REG_EXTENDED);
-  if (r) {
-    fprintf(stderr, "Could not compile regex\n");
-    exit(1);
+  if (r)
+  {
+    fprintf (stderr, "Could not compile regex\n");
+    exit (EXIT_FAILURE);
   }
 
-  r = regexec (&regex, number, 0, NULL, 0); 
-  if (!r) {
+  r = regexec (&regex, number, 0, NULL, 0);
+  if (!r)
+  {
     return 1;
   }
   return 0;
 }
 
 
-/**
-  Verify if a string is a valid number.
-
-  @param number
-  @return bool 
-*/
+/*
+ * Verify if a string is a valid number.
+ *
+ * @param number
+ * @return bool 
+ */
 int
-is_positive_number(char *number)
+is_positive_number (char *number)
 {
   int r;
   regex_t regex;
   const char *pattern = "^[0-9]+\\.?([0-9]+)?$";
 
   r = regcomp (&regex, pattern, REG_EXTENDED);
-  if (r) {
-    fprintf(stderr, "Could not compile regex\n");
-    exit(1);
+  if (r)
+  {
+    fprintf (stderr, "Could not compile regex\n");
+    exit (EXIT_FAILURE);
   }
 
-  r = regexec (&regex, number, 0, NULL, 0); 
-  if (!r) {
+  r = regexec (&regex, number, 0, NULL, 0);
+  if (!r)
+  {
     return 1;
   }
   return 0;
 }
 
 
-/**
-  Print command help.
-
-  @param void
-  @return void 
-*/
+/*
+ * Print command help.
+ *
+ * @param void
+ * @return void 
+ */
 void
-help(void)
+help (void)
 {
-  printf ("usage: buffon [-h] [-s] [-v] [-b <bzise>] -n <ndrop> -l <nsize>\n\n");
+  printf ("usage: buffon [-h] [-s] [-v] [-b <bzise>] -n <ndrop> -l <nsize>\n");
   printf ("Calculates PI using Buffon's technique\n\n");
   printf ("Options:\n");
   printf ("  -n <ndrop>    Number of needle drops\n");
@@ -92,7 +96,7 @@ help(void)
   printf ("  -v            Verbose mode\n");
   printf ("  -s            Show output in csv format\n");
   printf ("  -h            Show this help message and exit\n\n");
-  printf ("Exemples:\n");
+  printf ("Examples:\n");
   printf ("  buffon -n 1000 -l 1            # Drops 1000 time a needle of size 1\n");
   printf ("  buffon -n 1000 -l 1 -v         # Turn on the verbose mode\n");
   printf ("  buffon -n 1000 -l 1 -v -s      # Verbose output in csv format\n");
@@ -100,19 +104,19 @@ help(void)
 }
 
 
-/**
-  Buffon experiment
-
-  @param needle size
-  @return bool 
-*/
+/*
+ * Buffon experiment
+ *
+ * @param needle size
+ * @return bool 
+ */
 int
 drop_needle (double needle_size)
 {
   double a, b;
 
-  a = (double) rand () / (double) RAND_MAX * M_PI_2;
-  b = (double) rand () / (double) RAND_MAX * needle_size;
+  a = (double) rand () / (double) RAND_MAX *M_PI_2;
+  b = (double) rand () / (double) RAND_MAX *needle_size;
   if (needle_size / 2 * cos (a) >= b)
     return 1;
   return 0;
@@ -127,105 +131,107 @@ main (int argc, char **argv)
   long double r, l, sigma_err, real_err;
   unsigned long long int i, n, n1;
 
-  /* Read and parse command line arguments */
+  // Read and parse command line arguments
   opterr = 0;
   while ((c = getopt (argc, argv, "l:n:s::v::h::b:")) != -1)
     switch (c)
+    {
+    case 'n':
+      nflag = 1;
+      if (!is_integer (optarg))
       {
-      case 'n':
-        nflag = 1;
-        if (!is_integer(optarg)) {
-	        fprintf (stderr, "%s: error: number of drops must be an integer\n", argv[0]);
-          exit(1);
-        }
-        else
-          n = strtoull(optarg, NULL, 10);
-	      break;
-      case 'l':
-        lflag = 1;
-        if (!is_positive_number(optarg)) {
-	        fprintf (stderr, "%s: error: needle size must be positive\n", argv[0]);
-          exit(1);
-        }
-        else
-          l = strtod(optarg, NULL);
-	      break;
-      case 's':
-	      sflag = 1;
-	      break;
-      case 'b':
-        if (!is_integer(optarg)) {
-	        fprintf (stderr, "%s: error: block size must be an integer\n", argv[0]);
-          exit(1);
-        }
-        else
-          block_size = atoi(optarg);
-        break;
-      case 'v':
-	      vflag = 1;
-	      break;
-      case 'h':
-        help();
-        exit(0);
-	      break;
-      case '?':
-	      fprintf (stderr, "%s: error: invalid option\n", argv[0]);
-	      return 1;
-      default:
-        fprintf (stderr, "usage: buffon [-h] [-s] [-v] [-b <bzise>] -n <ndrop> -l <nsize>\n");
-	    abort ();
+	      fprintf (stderr, "%s: error: number of drops must be an integer\n", argv[0]);
+	      exit (EXIT_FAILURE);
       }
+      else
+	      n = strtoull (optarg, NULL, 10);
+      break;
+    case 'l':
+      lflag = 1;
+      if (!is_positive_number (optarg))
+      {
+	      fprintf (stderr, "%s: error: needle size must be positive\n", argv[0]);
+	      exit (EXIT_FAILURE);
+      }
+      else
+	      l = strtod (optarg, NULL);
+      break;
+    case 's':
+      sflag = 1;
+      break;
+    case 'b':
+      if (!is_integer (optarg))
+      {
+	      fprintf (stderr, "%s: error: block size must be an integer\n", argv[0]);
+	      exit (EXIT_FAILURE);
+      }
+      else
+	      block_size = atoi (optarg);
+      break;
+    case 'v':
+      vflag = 1;
+      break;
+    case 'h':
+      help ();
+	    exit (EXIT_SUCCESS);
+      break;
+    case '?':
+      fprintf (stderr, "%s: error: invalid option\n", argv[0]);
+      return 1;
+    default:
+      fprintf (stderr, "usage: buffon [-h] [-s] [-v] [-b <bzise>] -n <ndrop> -l <nsize>\n");
+      abort ();
+    }
 
   for (index = optind; index < argc; index++)
-    {
-	    fprintf (stderr, "%s: error: too many or too few arguments\n", argv[0]);
-      exit (1);
-    }
+  {
+    fprintf (stderr, "%s: error: too many or too few arguments\n", argv[0]);
+    exit (EXIT_FAILURE);
+  }
 
-  /* Verify integer overflow */
+  // Verify integer overflow 
   if (n + 1 < n)
-    {
-      fprintf (stderr, "%s: error: number of drops must be less than %llu \n", argv[0], ULLONG_MAX);
-      exit (1);
-    }
+  {
+    fprintf (stderr, "%s: error: number of drops must be less than %llu \n", argv[0], ULLONG_MAX);
+    exit (EXIT_FAILURE);
+  }
 
-  /* Check if obrigatory argumets were given*/
+  // Check if obrigatory argumets were given
   if (nflag == 0 || lflag == 0)
-    {
-      fprintf (stderr, "%s: error: too few parameters\n", argv[0]);
-      fprintf (stderr, "usage: buffon [-h] [-s] [-v] [-b <bzise>] -n <ndrop> -l <nsize>\n");
-      exit (1);
-    }
+  {
+    fprintf (stderr, "%s: error: too few parameters\n", argv[0]);
+    fprintf (stderr, "usage: buffon [-h] [-s] [-v] [-b <bzise>] -n <ndrop> -l <nsize>\n");
+    exit (EXIT_FAILURE);
+  }
 
-  /* Buffon experiment */
+  // Buffon experiment
   srand ((unsigned) time (NULL));
   for (i = 1, n1 = 1; i <= n; i++)
-    {
-      n1 = n1 + drop_needle (l);
+  {
+    n1 = n1 + drop_needle (l);
 
-      if (vflag == 1)
-	      if (i % block_size == 0)
-	      {
-	        r = (long double) i / (long double) n1;
-	        sigma_err = (long double) r / (long double) sqrt (i);
-	        real_err = fabs (M_PI - r);
-          
-          if (sflag == 1)
-	          printf ("%llu, %llu, %.9Lf, %.9Lf, %.9Lf\n", i, n1, r, sigma_err, real_err);
-          else
-	          printf ("n = %llu, n1 = %llu, pi = %.9Lf, sigma_err = %.9Lf, real_err = %.9Lf\n", i, n1, r, sigma_err, real_err);
-	      }
-    }
+    if (vflag == 1)
+      if (i % block_size == 0)
+      {
+	      r = (long double) i / (long double) n1;
+	      sigma_err = (long double) r / (long double) sqrt (i);
+	      real_err = fabs (M_PI - r);
+	      if (sflag == 1)
+	        printf ("%llu, %llu, %.9Lf, %.9Lf, %.9Lf\n", i, n1, r, sigma_err, real_err);
+	      else
+	        printf ("n = %llu, n1 = %llu, pi = %.9Lf, sigma_err = %.9Lf, real_err = %.9Lf\n", i, n1, r, sigma_err, real_err);
+      }
+  }
 
-	r = (long double) i / (long double) n1;
-	sigma_err = (long double) r / (long double) sqrt (i);
-	real_err = fabs (M_PI - r);
+  r = (long double) i / (long double) n1;
+  sigma_err = (long double) r / (long double) sqrt (i);
+  real_err = fabs (M_PI - r);
 
-  /* Print output */
+  // Print output
   if (vflag == 0)
     if (sflag == 1)
-	    printf ("%llu, %llu, %.9Lf, %.9Lf, %.9Lf\n", n, n1, r, sigma_err, real_err);
+      printf ("%llu, %llu, %.9Lf, %.9Lf, %.9Lf\n", n, n1, r, sigma_err, real_err);
     else
-	    printf ("n = %llu, n1 = %llu, pi = %.9Lf, sigma_err = %.9Lf, real_err = %.9Lf\n", n, n1, r, sigma_err, real_err);
+      printf ("n = %llu, n1 = %llu, pi = %.9Lf, sigma_err = %.9Lf, real_err = %.9Lf\n", n, n1, r, sigma_err, real_err);
   return 0;
 }
