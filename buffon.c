@@ -1,13 +1,8 @@
-/*
- * AGA511
- * EP-1
- * buffon.c
- * Purpose: Calculates pi using Buffon's technique.
- *
- * @author: Marcelo Pinto
- * @email: mpinto@usp.br
- * @version: 0.6
- * @date: 09/11/2017
+/** @file     buffon.c
+ *  @brief    Calculates pi using Buffon's technique.
+ *  @author   Marcelo Pinto (xmrcl0@gmail.com)
+ *  @date     09/11/2017
+ *  @version  0.7
  */
 
 #include <stdio.h>
@@ -17,72 +12,12 @@
 #include <ctype.h>
 #include <time.h>
 #include <limits.h>
-#include <regex.h>
+#include "utils.h"
 
-
-/*
- * Verify if a string is a valid integer.
+/** @brief Print command help.
  *
- * @param number
- * @return bool 
- */
-int
-is_integer (char *number)
-{
-  int r;
-  regex_t regex;
-  const char *pattern = "^[0-9]+$";
-
-  r = regcomp (&regex, pattern, REG_EXTENDED);
-  if (r)
-  {
-    fprintf (stderr, "Could not compile regex\n");
-    exit (EXIT_FAILURE);
-  }
-
-  r = regexec (&regex, number, 0, NULL, 0);
-  if (!r)
-  {
-    return 1;
-  }
-  return 0;
-}
-
-
-/*
- * Verify if a string is a valid number.
- *
- * @param number
- * @return bool 
- */
-int
-is_positive_number (char *number)
-{
-  int r;
-  regex_t regex;
-  const char *pattern = "^[0-9]+\\.?([0-9]+)?$";
-
-  r = regcomp (&regex, pattern, REG_EXTENDED);
-  if (r)
-  {
-    fprintf (stderr, "Could not compile regex\n");
-    exit (EXIT_FAILURE);
-  }
-
-  r = regexec (&regex, number, 0, NULL, 0);
-  if (!r)
-  {
-    return 1;
-  }
-  return 0;
-}
-
-
-/*
- * Print command help.
- *
- * @param void
- * @return void 
+ *  @param  void
+ *  @return void 
  */
 void
 help (void)
@@ -104,11 +39,10 @@ help (void)
 }
 
 
-/*
- * Buffon experiment
+/** @brief Buffon experiment.
  *
- * @param needle size
- * @return bool 
+ *  @param[in] n Needle size
+ *  @return bool
  */
 int
 drop_needle (double needle_size)
