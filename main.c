@@ -13,7 +13,7 @@ int param_parse(int argc, char **argv, unsigned long long *n, double *l, int *sf
   int i, c, nflag = 0, lflag = 0;
 
   opterr = 0;
-  while ((c = getopt (argc, argv, "l:n:s::v::h::b:")) != -1)
+  while ((c = getopt (argc, argv, "l:n:h::")) != -1)
   {
     switch (c)
     {
@@ -45,14 +45,14 @@ int param_parse(int argc, char **argv, unsigned long long *n, double *l, int *sf
       break;
     case 'h':
       help ();
-	    return 0;
+	    return 1;
       break;
     case '?':
       fprintf (stderr, "%s: error: invalid option\n", argv[0]);
-      fprintf (stderr, "usage: buffon [-h] [-s] [-v] [-b <bzise>] -n <ndrop> -l <nsize>\n");
+      fprintf (stderr, "usage: buffon [-h] -n <ndrop> -l <nsize>\n");
       return 1;
     default:
-      fprintf (stderr, "usage: buffon [-h] [-s] [-v] [-b <bzise>] -n <ndrop> -l <nsize>\n");
+      fprintf (stderr, "usage: buffon [-h] -n <ndrop> -l <nsize>\n");
       return 1;
     }
   }
@@ -75,7 +75,7 @@ int param_parse(int argc, char **argv, unsigned long long *n, double *l, int *sf
   if (nflag == 0 || lflag == 0)
   {
     fprintf (stderr, "%s: error: too few parameters\n", argv[0]);
-    fprintf (stderr, "usage: buffon [-h] [-s] [-v] [-b <bzise>] -n <ndrop> -l <nsize>\n");
+    fprintf (stderr, "usage: buffon [-h] -n <ndrop> -l <nsize>\n");
     return 1;
   }
   return 0;

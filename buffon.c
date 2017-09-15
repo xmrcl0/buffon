@@ -15,20 +15,16 @@
 void
 help (void)
 {
-  printf ("usage: buffon [-h] [-s] [-v] [-b <bzise>] -n <ndrop> -l <nsize>\n");
+  printf ("usage: buffon [-h] [-v] -n <ndrop> -l <nsize>\n");
   printf ("Calculates PI using Buffon's technique\n\n");
   printf ("Options:\n");
   printf ("  -n <ndrop>    Number of needle drops\n");
   printf ("  -l <nsize>    Needle size\n");
-  printf ("  -b <bsize>    Block size to print (verbose mode)\n");
   printf ("  -v            Verbose mode\n");
-  printf ("  -s            Show output in csv format\n");
   printf ("  -h            Show this help message and exit\n\n");
   printf ("Examples:\n");
   printf ("  buffon -n 1000 -l 1            # Drops 1000 time a needle of size 1\n");
   printf ("  buffon -n 1000 -l 1 -v         # Turn on the verbose mode\n");
-  printf ("  buffon -n 1000 -l 1 -v -s      # Verbose output in csv format\n");
-  printf ("  buffon -n 1000 -l 1 -v -b 100  # Verbose Output in chunks of 100 (default=1)\n");
 }
 
 
