@@ -1,7 +1,7 @@
 TARGET = buffon 
 LIBS = -lm
 CC = gcc
-CFLAGS = -g -Wall -I.
+CFLAGS = -g -I.
 
 .PHONY: default all clean
 
