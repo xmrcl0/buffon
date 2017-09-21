@@ -2,6 +2,7 @@
  *  @brief    Function prototypes for buffon.
  *  @author   Marcelo Pinto (xmrcl0@gmail.com)
  *  @date     09/13/2017
+ *  @date     09/21/2017
  */
 
 #include <stdio.h>
@@ -12,12 +13,6 @@
 #include <time.h>
 #include <limits.h>
 
-/** @brief Print command help.
- *
- *  @param  void
- *  @return void 
- */
-void help (void);
 
 /** @brief Drop needle.
  *
