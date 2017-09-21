@@ -41,10 +41,3 @@ buffon_exp (float l, unsigned long long int n, double *p, double *s)
     *s = (long double) *p / (long double) sqrt (i);
   }
 }
-
-
-void
-print_out (double *pi, double *exp_err)
-{
-  printf ("pi = %g, exp_err = %g, real_err = %g\n", *pi, *exp_err, fabs (M_PI - *pi));
-}

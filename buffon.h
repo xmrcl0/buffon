@@ -30,11 +30,3 @@ int drop_needle (double needle_size);
  *  @return void 
  */
 void buffon_exp (float l, unsigned long long int n, double *p, double *s);
-
-/** @brief Print output.
- *
- *  @param[in] p  Pi value
- *  @param[in] s  Experimental error
- *  @return void 
- */
-void print_out (double *pi, double *s);

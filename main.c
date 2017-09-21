@@ -115,7 +115,7 @@ main (int argc, char **argv)
   buffon_exp(l, n, &pi, &exp_err);
 
   // Print output
-  print_out(&pi, &exp_err);
+  printf ("pi = %g, exp_err = %g, real_err = %g\n", pi, exp_err, fabs (M_PI - pi));
 
   return 0;
 }
