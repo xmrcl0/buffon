@@ -2,12 +2,14 @@
  *  @brief    Utils functions.
  *  @author   Marcelo Pinto (xmrcl0@gmail.com)
  *  @date     09/12/2017
+ *  @update   09/21/2017
  */
 
 #include <utils.h>
 
+
 int
-is_integer (char *number)
+is_natural_num (char *number)
 {
   int r;
   regex_t regex;
@@ -30,7 +32,7 @@ is_integer (char *number)
 
 
 int
-is_positive_number (char *number)
+is_positive_num (char *number)
 {
   int r;
   regex_t regex;
