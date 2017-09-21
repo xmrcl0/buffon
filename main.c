@@ -1,14 +1,30 @@
-/** @file     buffon.c
+/** @file     main.c
  *  @brief    Calculates pi using Buffon's technique.
  *  @author   Marcelo Pinto (xmrcl0@gmail.com)
  *  @date     09/15/2017
- *  @version  0.8
+ *  @update   09/21/2017
  */
 
 #include <utils.h>
 #include <buffon.h>
 
-int param_parse(int argc, char **argv, unsigned long long *n, double *l, int *sflag, int *vflag)
+
+void
+help (void)
+{
+  printf ("usage: buffon [-h] [-v] -n <ndrop> -l <nsize>\n");
+  printf ("Calculates PI using Buffon's technique\n\n");
+  printf ("Options:\n");
+  printf ("  -n <ndrop>    Number of needle drops\n");
+  printf ("  -l <nsize>    Needle size\n");
+  printf ("  -h            Show this help message and exit\n\n");
+  printf ("Examples:\n");
+  printf ("  buffon -n 1000 -l 1            # Drops 1000 time a needle of size 1\n");
+}
+
+
+int
+parse_cmdline(int argc, char **argv, unsigned long long *n, double *l, int *sflag, int *vflag)
 {
   int i, c, nflag = 0, lflag = 0;
 
@@ -19,7 +35,7 @@ int param_parse(int argc, char **argv, unsigned long long *n, double *l, int *sf
     {
     case 'n':
       nflag = 1;
-      if (!is_integer (optarg))
+      if (!is_natural_num (optarg))
       {
 	      fprintf (stderr, "%s: error: number of drops must be an integer\n", argv[0]);
 	      return 1;
@@ -29,7 +45,7 @@ int param_parse(int argc, char **argv, unsigned long long *n, double *l, int *sf
       break;
     case 'l':
       lflag = 1;
-      if (!is_positive_number (optarg))
+      if (!is_positive_num (optarg))
       {
 	      fprintf (stderr, "%s: error: needle size must be positive\n", argv[0]);
 	      return 1;
@@ -90,9 +106,9 @@ main (int argc, char **argv)
   double l = 0, pi, exp_err, r;
 
   // Parse command line arguments
-  if (param_parse (argc, argv, &n, &l, &sflag, &vflag))
+  if (parse_cmdline (argc, argv, &n, &l, &sflag, &vflag))
   {
-    exit (EXIT_FAILURE);
+    return 1;
   }
 
   // Buffon experiment
